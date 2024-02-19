@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" >
+<!--    <include resource="org/springframework/boot/logging/logback/base.xml" />-->
+    <contextName>my-logback</contextName>
+
+    <!-- 日志文件名称 -->
+    <property name="log.path" value="log/logback.log" />
+
+    <!-- 输出的控制台 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>INFO</level>-->
+<!--        </filter>-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{40} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 输出到文件 -->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>INFO</level>-->
+<!--        </filter>-->
+        <!--日志名，用到了上面配置的路径-->
+        <file>${log.path}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 单个文件最大100M -->
+            <maxFileSize>1MB</maxFileSize>
+            <!-- 保留30天的日志 -->
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="customAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>INFO</level>-->
+<!--        </filter>-->
+        <!--日志名，用到了上面配置的路径-->
+        <file>log/customAppender.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>log/customAppender.log.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 单个文件最大100M -->
+            <maxFileSize>1MB</maxFileSize>
+            <!-- 保留30天的日志 -->
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 开发环境 -->
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="console" />
+            <appender-ref ref="file" />
+        </root>
+    </springProfile>
+
+    <!-- test环境 -->
+    <springProfile name="test">
+        <root level="DEBUG">
+            <appender-ref ref="console" />
+            <appender-ref ref="file" />
+        </root>
+    </springProfile>
+
+
+    <!--设置具体包的隔离级别，一般使用mybatis会单独设置mapper-->
+<!--    <logger name="com.gzl.cn.mapper.UserMapper" level="DEBUG"></logger>-->
+
+
+<!-- 自定义Appender   additivity="false" 表示不输出到root-->
+    <logger name="customAppender" level="INFO" additivity="false">
+        <appender-ref ref="customAppender" />
+    </logger>
+</configuration>
