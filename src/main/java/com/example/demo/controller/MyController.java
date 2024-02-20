@@ -28,7 +28,7 @@ public class MyController {
         log.debug("aaaaaaa");
         log.info("aaaaaaa");
         log.error("aaaaaaa");
-        return "getdata hello";
+        return "getdata hello jenkins";
     }
 
     @RequestMapping(value = "/postdata")
